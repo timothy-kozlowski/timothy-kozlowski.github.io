@@ -9,15 +9,6 @@ document.getElementById("theme-toggle").addEventListener("click", () => {
   localStorage.setItem("theme", next);
 });
 
-// Highlight that follows the cursor across project cards
-document.querySelectorAll(".card").forEach((card) => {
-  card.addEventListener("pointermove", (e) => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty("--x", `${e.clientX - r.left}px`);
-    card.style.setProperty("--y", `${e.clientY - r.top}px`);
-  });
-});
-
 // Fade project cards in as they scroll into view
 const observer = new IntersectionObserver(
   (entries) => {
