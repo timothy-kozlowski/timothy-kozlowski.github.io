@@ -1,0 +1,294 @@
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --text: #1c1d1f;
+  --muted: #5d6066;
+  --border: #e2e0da;
+  --accent: #1f7a5c;        /* solder-mask green */
+  --accent-soft: rgba(31, 122, 92, 0.12);
+  --grid: rgba(28, 29, 31, 0.045);
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121417;
+  --surface: #191c20;
+  --text: #e8e6e1;
+  --muted: #9a9ea6;
+  --border: #2a2e34;
+  --accent: #4cc39a;
+  --accent-soft: rgba(76, 195, 154, 0.14);
+  --grid: rgba(232, 230, 225, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121417;
+    --surface: #191c20;
+    --text: #e8e6e1;
+    --muted: #9a9ea6;
+    --border: #2a2e34;
+    --accent: #4cc39a;
+    --accent-soft: rgba(76, 195, 154, 0.14);
+    --grid: rgba(232, 230, 225, 0.04);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text);
+  background-color: var(--bg);
+  /* faint engineering-paper grid */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+main {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 96px 24px 48px;
+  flex: 1;
+}
+
+/* ---------- Intro ---------- */
+h1 {
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.tagline {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 10px 0 28px;
+}
+
+.intro p:not(.tagline) {
+  color: var(--muted);
+  margin-bottom: 14px;
+  max-width: 60ch;
+}
+
+/* ---------- Contact icons ---------- */
+.contact {
+  display: flex;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.contact a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  transition: transform 0.18s ease, border-color 0.18s, color 0.18s;
+}
+
+.contact a:hover,
+.contact a:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* label that slides up on hover */
+.contact a::after {
+  content: attr(data-label);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, -4px);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+
+.contact a:hover::after,
+.contact a:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+svg.filled { fill: currentColor; stroke: none; }
+
+/* ---------- Projects ---------- */
+.projects { margin-top: 80px; }
+
+h2 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.card {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.card.visible { opacity: 1; transform: none; transition: opacity 0.5s, transform 0.5s, border-color 0.2s; }
+
+/* cursor-following highlight, position set from script.js */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(260px circle at var(--x, 50%) var(--y, 50%), var(--accent-soft), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.card:hover::before { opacity: 1; }
+.card:hover,
+.card:focus-within { border-color: var(--accent); }
+
+.card-link {
+  position: relative;
+  display: block;
+  padding: 22px 24px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+h3 { font-size: 1.1rem; font-weight: 600; }
+
+.arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  transition: transform 0.2s, color 0.2s;
+}
+
+.card:hover .arrow { transform: translate(3px, -3px); color: var(--accent); }
+
+.card p { color: var(--muted); font-size: 0.95rem; }
+
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.tags li {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------- Theme toggle ---------- */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.3s, border-color 0.2s;
+}
+
+.theme-toggle:hover { border-color: var(--accent); transform: rotate(20deg); }
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: block; }
+}
+
+/* ---------- Footer ---------- */
+footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 520px) {
+  main { padding-top: 72px; }
+  .card-link { padding: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .card { opacity: 1; transform: none; }
+}
