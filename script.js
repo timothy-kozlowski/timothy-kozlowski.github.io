@@ -32,4 +32,3 @@ const observer = new IntersectionObserver(
 );
 document.querySelectorAll(".card").forEach((card) => observer.observe(card));
 
-document.getElementById("year").textContent = new Date().getFullYear();
